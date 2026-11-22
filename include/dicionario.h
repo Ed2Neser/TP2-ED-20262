@@ -23,8 +23,6 @@ struct NoLista : public NoCliente
 
 class Dicionario
 {
-private:
-    char modo; // 'A' para AVL, 'H' para Hash
 public:
     virtual ~Dicionario() = default;
     virtual void inserir(Cliente *cliente) = 0; // cliente passado pelo Indice

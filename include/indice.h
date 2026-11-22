@@ -5,7 +5,7 @@
 #include "dicionario.h"
 #include "vetor.h"
 
-// inserção por id
+// inserção por objeto
 // remoção por id
 // busca via poder
 // busca via faixa de poder
@@ -13,16 +13,20 @@
 class Indice
 {
 private:
-    Vetor<Cliente *> clientes;
+    Vetor<Cliente *> clientes; // vetor denso pkrl
     Dicionario *dicionario;
-
+    char modo; // 'A' para AVL, 'H' para Hash
 public:
     Indice();  // inicia o dicionario em AVL
     ~Indice(); // destrói também o dicionario
 
     void trocarModo(char modo); // 'A' para AVL, 'H' para Hash
 
-    // removerCliente retira o cliente do vetor (criar uma função em Vetor que remove ordenado (arrastando o resto do vetor) E do dicionario
-};
+    void inserirCliente(Cliente *cliente);                 // insere no vetor e no dicionario
+    void removerCliente(int idCliente);                    // remove do vetor e do dicionario
+    NoLista *buscarPoderExato(int poder);                  // busca no dicionario e imprime os clientes encontrados
+    NoLista *buscarPoderFaixa(int poderMin, int poderMax); // busca no d
 
+    Cliente *getCliente(int id) const;
+};
 #endif
