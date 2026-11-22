@@ -7,13 +7,13 @@ ArvoreAVL::~ArvoreAVL()
     destruirRec(raiz);
 }
 
-void ArvoreAVL::destruirRec(NoAVL *p)
+void ArvoreAVL::destruirRec(NoAVL *no)
 {
-    if (p != nullptr)
+    if (no != nullptr)
     {
-        destruirRec(static_cast<NoAVL *>(p->esq));
-        destruirRec(static_cast<NoAVL *>(p->dir));
-        delete p;
+        destruirRec(no->esq);
+        destruirRec(no->dir);
+        delete no;
     }
 }
 
@@ -22,24 +22,23 @@ int ArvoreAVL::maiorFilho(int a, int b)
     return (a > b) ? a : b;
 }
 
-int ArvoreAVL::altura(NoAVL *p) const
+int ArvoreAVL::altura(NoAVL *no) const
 {
-    return (p == nullptr) ? -1 : p->altura;
+    return (no == nullptr) ? -1 : no->altura;
 }
 
-int ArvoreAVL::fatorBalanceamento(NoAVL *p) const
+int ArvoreAVL::fatorBalanceamento(NoAVL *no) const
 {
-    if (p == nullptr)
+    if (no == nullptr)
         return 0;
-    return altura(static_cast<NoAVL *>(p->dir)) - altura(static_cast<NoAVL *>(p->esq));
+    return altura(no->dir) - altura(no->esq);
 }
 
-void ArvoreAVL::atualizarAltura(NoAVL *p)
+void ArvoreAVL::atualizarAltura(NoAVL *no)
 {
-    if (p != nullptr)
+    if (no != nullptr)
     {
-        p->altura = 1 + maiorFilho(altura(static_cast<NoAVL *>(p->esq)),
-                                   altura(static_cast<NoAVL *>(p->dir)));
+        no->altura = 1 + maiorFilho(altura(no->esq), altura(no->dir));
     }
 }
 
@@ -52,50 +51,46 @@ bool ArvoreAVL::chaveMenor(int poderA, int idA, int poderB, int idB)
     return idA < idB;
 }
 
-void ArvoreAVL::rotacaoDireita(NoAVL *&p)
+void ArvoreAVL::rotacaoDireita(NoAVL *&no)
 {
-    NoAVL *f = static_cast<NoAVL *>(p->esq);
-    p->esq = f->dir;
-    f->dir = p;
-    atualizarAltura(p);
-    atualizarAltura(f);
-    p = f;
+    NoAVL *aux = no->esq;
+    no->esq = aux->dir;
+    aux->dir = no;
+    atualizarAltura(no); // primeiro quem desceu
+    atualizarAltura(aux);  // depois quem subiu
+    no = aux;
 }
 
-void ArvoreAVL::rotacaoEsquerda(NoAVL *&p)
+void ArvoreAVL::rotacaoEsquerda(NoAVL *&no)
 {
-    NoAVL *f = static_cast<NoAVL *>(p->dir);
-    p->dir = f->esq;
-    f->esq = p;
-    atualizarAltura(p);
-    atualizarAltura(f);
-    p = f;
+    NoAVL *aux = no->dir;
+    no->dir = aux->esq;
+    aux->esq = no;
+    atualizarAltura(no); // primeiro quem desceu
+    atualizarAltura(aux);  // depois quem subiu
+    no = aux;
 }
 
-void ArvoreAVL::balancear(NoAVL *&p)
+void ArvoreAVL::balancear(NoAVL *&no)
 {
-    atualizarAltura(p);
-    int fb = fatorBalanceamento(p);
+    atualizarAltura(no);
+    int fb = fatorBalanceamento(no);
 
     if (fb == -2)
     {
-        NoAVL *esq = static_cast<NoAVL *>(p->esq);
-        if (fatorBalanceamento(esq) > 0)
+        if (fatorBalanceamento(no->esq) > 0)
         {
-            rotacaoEsquerda(esq); // Rotação dupla Esquerda-Direita
-            p->esq = esq;
+            rotacaoEsquerda(no->esq); // Rotação dupla Esquerda-Direita
         }
-        rotacaoDireita(p); // Rotação simples à direita
+        rotacaoDireita(no); // Rotação simples à direita
     }
     else if (fb == 2)
     {
-        NoAVL *dir = static_cast<NoAVL *>(p->dir);
-        if (fatorBalanceamento(dir) < 0)
+        if (fatorBalanceamento(no->dir) < 0)
         {
-            rotacaoDireita(dir); // Rotação dupla Direita-Esquerda
-            p->dir = dir;
+            rotacaoDireita(no->dir); // Rotação dupla Direita-Esquerda
         }
-        rotacaoEsquerda(p); // Rotação simples à esquerda
+        rotacaoEsquerda(no); // Rotação simples à esquerda
     }
 }
 
@@ -106,32 +101,28 @@ void ArvoreAVL::inserir(Cliente *cliente)
     inserirRec(raiz, cliente->getId(), cliente->getPoder());
 }
 
-void ArvoreAVL::inserirRec(NoAVL *&p, int id, int poder)
+void ArvoreAVL::inserirRec(NoAVL *&no, int id, int poder)
 {
-    if (p == nullptr)
+    if (no == nullptr)
     {
-        p = new NoAVL(id, poder);
+        no = new NoAVL(id, poder);
         return;
     }
 
-    if (chaveMenor(poder, id, p->poderCliente, p->idCliente))
+    if (chaveMenor(poder, id, no->poderCliente, no->idCliente))
     {
-        NoAVL *esq = static_cast<NoAVL *>(p->esq);
-        inserirRec(esq, id, poder);
-        p->esq = esq;
+        inserirRec(no->esq, id, poder);
     }
-    else if (chaveMenor(p->poderCliente, p->idCliente, poder, id))
+    else if (chaveMenor(no->poderCliente, no->idCliente, poder, id))
     {
-        NoAVL *dir = static_cast<NoAVL *>(p->dir);
-        inserirRec(dir, id, poder);
-        p->dir = dir;
+        inserirRec(no->dir, id, poder);
     }
     else
     {
         return; // Chave (poder, id) já presente
     }
 
-    balancear(p);
+    balancear(no);
 }
 
 void ArvoreAVL::remover(Cliente *cliente)
@@ -141,74 +132,65 @@ void ArvoreAVL::remover(Cliente *cliente)
     removerRec(raiz, cliente->getId(), cliente->getPoder());
 }
 
-void ArvoreAVL::removerRec(NoAVL *&p, int id, int poder)
+void ArvoreAVL::removerRec(NoAVL *&no, int id, int poder)
 {
-    if (p == nullptr)
+    if (no == nullptr)
         return;
 
-    if (chaveMenor(poder, id, p->poderCliente, p->idCliente))
+    if (chaveMenor(poder, id, no->poderCliente, no->idCliente))
     {
-        NoAVL *esq = static_cast<NoAVL *>(p->esq);
-        removerRec(esq, id, poder);
-        p->esq = esq;
+        removerRec(no->esq, id, poder);
     }
-    else if (chaveMenor(p->poderCliente, p->idCliente, poder, id))
+    else if (chaveMenor(no->poderCliente, no->idCliente, poder, id))
     {
-        NoAVL *dir = static_cast<NoAVL *>(p->dir);
-        removerRec(dir, id, poder);
-        p->dir = dir;
+        removerRec(no->dir, id, poder);
     }
     else
     {
-        if (p->esq == nullptr || p->dir == nullptr)
+        if (no->esq == nullptr || no->dir == nullptr)
         {
-            NoAVL *aux = p;
-            p = static_cast<NoAVL *>((p->esq != nullptr) ? p->esq : p->dir);
+            NoAVL *aux = no;
+            no = (no->esq != nullptr) ? no->esq : no->dir;
             delete aux;
         }
         else
         {
-            // Antecessor em-ordem (maior da subárvore esquerda)
-            NoAVL *antecessor = static_cast<NoAVL *>(p->esq);
+            // Antecessor em-ordem (maior da subárvore esquerda)[cite: 791]
+            NoAVL *antecessor = no->esq;
             while (antecessor->dir != nullptr)
             {
-                antecessor = static_cast<NoAVL *>(antecessor->dir);
+                antecessor = antecessor->dir;
             }
 
-            p->idCliente = antecessor->idCliente;
-            p->poderCliente = antecessor->poderCliente;
+            no->idCliente = antecessor->idCliente;
+            no->poderCliente = antecessor->poderCliente;
 
-            NoAVL *esq = static_cast<NoAVL *>(p->esq);
-            removerRec(esq, antecessor->idCliente, antecessor->poderCliente);
-            p->esq = esq;
+            removerRec(no->esq, antecessor->idCliente, antecessor->poderCliente);
         }
     }
 
-    if (p != nullptr)
+    if (no != nullptr)
     {
-        balancear(p);
+        balancear(no);
     }
 }
 
-void ArvoreAVL::buscarFaixaRec(NoAVL *p, int poderMin, int poderMax,
-                               NoCliente *&cabeca, NoCliente *&cauda) const
+void ArvoreAVL::buscarFaixaRec(NoAVL *no, int poderMin, int poderMax,
+                               NoLista *&cabeca, NoLista *&cauda) const
 {
-    if (p == nullptr)
+    if (no == nullptr)
         return;
 
-    // Usa >= e <= para não podar empates de poder em nós filhos
-    if (p->poderCliente >= poderMin)
+    // usa >= e <= para não cortar fora os empates de poder em nós filhos
+    if (no->poderCliente >= poderMin)
     {
-        buscarFaixaRec(static_cast<NoAVL *>(p->esq), poderMin, poderMax, cabeca, cauda);
+        buscarFaixaRec(no->esq, poderMin, poderMax, cabeca, cauda);
     }
 
-    if (p->poderCliente >= poderMin && p->poderCliente <= poderMax)
+    if (no->poderCliente >= poderMin && no->poderCliente <= poderMax)
     {
-        NoCliente *novo = new NoCliente();
-        novo->idCliente = p->idCliente;
-        novo->poderCliente = p->poderCliente;
-        novo->esq = nullptr;
-        novo->dir = nullptr;
+        NoLista *novo = new NoLista(no->idCliente, no->poderCliente);
+        novo->prox = nullptr;
 
         if (cabeca == nullptr)
         {
@@ -217,29 +199,29 @@ void ArvoreAVL::buscarFaixaRec(NoAVL *p, int poderMin, int poderMax,
         }
         else
         {
-            cauda->dir = novo;
+            cauda->prox = novo;
             cauda = novo;
         }
     }
 
-    if (p->poderCliente <= poderMax)
+    if (no->poderCliente <= poderMax)
     {
-        buscarFaixaRec(static_cast<NoAVL *>(p->dir), poderMin, poderMax, cabeca, cauda);
+        buscarFaixaRec(no->dir, poderMin, poderMax, cabeca, cauda);
     }
 }
 
-NoCliente *ArvoreAVL::buscarPoderExato(int poder)
+NoLista *ArvoreAVL::buscarPoderExato(int poder)
 {
     return buscarPoderFaixa(poder, poder);
 }
 
-NoCliente *ArvoreAVL::buscarPoderFaixa(int poderMin, int poderMax)
+NoLista *ArvoreAVL::buscarPoderFaixa(int poderMin, int poderMax)
 {
     if (poderMin > poderMax)
         return nullptr;
 
-    NoCliente *cabeca = nullptr;
-    NoCliente *cauda = nullptr;
+    NoLista *cabeca = nullptr;
+    NoLista *cauda = nullptr;
     buscarFaixaRec(raiz, poderMin, poderMax, cabeca, cauda);
-    return cabeca;
+    return cabeca; // a lista encadeada ja vem ordenada, pois a arvore tem estrutura sob medida
 }

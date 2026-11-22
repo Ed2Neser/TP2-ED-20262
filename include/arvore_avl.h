@@ -1,11 +1,13 @@
-#ifndef ARVORE_AVL_HPP
-#define ARVORE_AVL_HPP
+#ifndef ARVORE_AVL_H
+#define ARVORE_AVL_H
 
 #include "Dicionario.h"
 
 struct NoAVL : public NoCliente
 {
     int altura;
+    NoAVL *esq;
+    NoAVL *dir;
 
     NoAVL(int id, int poder)
     {
@@ -14,22 +16,22 @@ struct NoAVL : public NoCliente
         esq = nullptr;
         dir = nullptr;
         altura = 0;
-    };
-    NoAVL(Cliente *cliente)
+    }
+
+    explicit NoAVL(Cliente *cliente)
     {
         idCliente = cliente->getId();
         poderCliente = cliente->getPoder();
         esq = nullptr;
         dir = nullptr;
         altura = 0;
-    };
+    }
 };
 
 class ArvoreAVL : public Dicionario
 {
 private:
     NoAVL *raiz;
-    char modo = 'A'; // 'A' para AVL, 'H' para Hash
 
     static int maiorFilho(int a, int b);
     int altura(NoAVL *p) const;
@@ -44,7 +46,7 @@ private:
 
     void inserirRec(NoAVL *&p, int id, int poder);
     void removerRec(NoAVL *&p, int id, int poder);
-    void buscarFaixaRec(NoAVL *p, int poderMin, int poderMax, NoCliente *&cabeca, NoCliente *&cauda) const;
+    void buscarFaixaRec(NoAVL *p, int poderMin, int poderMax, NoLista *&cabeca, NoLista *&cauda) const;
     void destruirRec(NoAVL *p);
 
 public:
@@ -56,8 +58,8 @@ public:
 
     void inserir(Cliente *cliente) override;
     void remover(Cliente *cliente) override;
-    NoCliente *buscarPoderExato(int poder) override;
-    NoCliente *buscarPoderFaixa(int poderMin, int poderMax) override;
+    NoLista *buscarPoderExato(int poder) override;
+    NoLista *buscarPoderFaixa(int poderMin, int poderMax) override;
 };
 
 #endif

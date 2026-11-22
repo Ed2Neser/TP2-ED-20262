@@ -3,12 +3,22 @@
 
 #include "cliente.h"
 
-struct NoCliente // nó generico que serve tanto para a tabela hash quanto para a avl.
+struct NoCliente // nó generico que serve tanto para uma lista quanto para a arvore (avl).
 {
     int idCliente;
     int poderCliente;
-    NoCliente *esq; // ponteiro para o filho esquerdo (para AVL)
-    NoCliente *dir; // ponteiro para o próximo nó na lista encadeada (para Hash) ou para o filho direito (para AVL)
+};
+
+struct NoLista : public NoCliente
+{
+    NoLista *prox;
+
+    NoLista(int id, int poder)
+    {
+        idCliente = id;
+        poderCliente = poder;
+        prox = nullptr;
+    };
 };
 
 class Dicionario
@@ -19,8 +29,8 @@ public:
     virtual ~Dicionario() = default;
     virtual void inserir(Cliente *cliente) = 0; // cliente passado pelo Indice
     virtual void remover(Cliente *cliente) = 0; // cliente passado pelo Indice
-    virtual NoCliente *buscarPoderExato(int poder) = 0;
-    virtual NoCliente *buscarPoderFaixa(int poderMin, int poderMax) = 0;
+    virtual NoLista *buscarPoderExato(int poder) = 0;
+    virtual NoLista *buscarPoderFaixa(int poderMin, int poderMax) = 0;
 };
 
 #endif
