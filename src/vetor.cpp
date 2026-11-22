@@ -1,6 +1,8 @@
 #include "../include/vetor.h"
 #include "../include/fila_prioridade.h"
 #include "../include/cliente.h"
+#include "../include/atributo.h"
+#include "../include/mapa.h"
 
 template <typename T> // Construtor generico
 Vetor<T>::Vetor() : elementos(nullptr), capacidade(0), tamanho(0)
@@ -92,3 +94,6 @@ const T &Vetor<T>::operator[](int i) const
 template class Vetor<ElementoPrioridade>;
 template class Vetor<Cliente *>;
 template class Vetor<int>;
+template class Vetor<Atributo>;
+template class Vetor<Regiao *>;
+template class Vetor<Rota>;

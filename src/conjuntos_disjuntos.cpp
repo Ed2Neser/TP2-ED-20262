@@ -1,5 +1,9 @@
 #include "../include/conjuntos_disjuntos.h"
 
+ConjuntosDisjuntos::ConjuntosDisjuntos() : pai(), rank()
+{
+}
+
 ConjuntosDisjuntos::ConjuntosDisjuntos(int n) : pai(n), rank(n)
 {
     for (int i = 0; i < n; i++)

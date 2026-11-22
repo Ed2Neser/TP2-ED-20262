@@ -23,7 +23,7 @@ private:
     void Desce(int i);
 
 public:
-    FilaPrioridade() = default;
+    FilaPrioridade();
     ~FilaPrioridade() = default;
 
     void adicionar(int prioridade, int idCliente);
