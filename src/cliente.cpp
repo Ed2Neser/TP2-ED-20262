@@ -1,9 +1,10 @@
 #include "../include/cliente.h"
 
-Cliente::Cliente(int id, const std::string &nome, AtributoValor *build) : id(id), nome(nome), build(build)
+Cliente::Cliente(int id, const std::string &nome, AtributoValor *build, int tamanhoBuild)
+    : id(id), nome(nome), build(build)
 {
     poder = 0;
-    for (int i = 0; i < 5; ++i)
+    for (int i = 0; i < tamanhoBuild; ++i)
     {
         poder += build[i].valor;
     }

@@ -1,7 +1,7 @@
 #ifndef ARVORE_AVL_H
 #define ARVORE_AVL_H
 
-#include "Dicionario.h"
+#include "dicionario.h"
 
 struct NoAVL : public NoCliente
 {

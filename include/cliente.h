@@ -18,7 +18,7 @@ private:
     int poder;
 
 public:
-    Cliente(int id, const std::string &nome, AtributoValor *build);
+    Cliente(int id, const std::string &nome, AtributoValor *build, int tamanhoBuild);
     ~Cliente();
 
     int getId() const;
