@@ -58,7 +58,7 @@ void Vetor<T>::removerUltimo()
 }
 
 template <typename T>
-T Vetor<T>::last()
+T Vetor<T>::last() const
 {
     if (tamanho == 0)
     {

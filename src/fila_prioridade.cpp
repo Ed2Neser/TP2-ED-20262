@@ -1,6 +1,8 @@
 #include "../include/fila_prioridade.h"
 #include <stdexcept>
 
+// implementei conforme slides do curso
+
 FilaPrioridade::FilaPrioridade() : v()
 {
 }

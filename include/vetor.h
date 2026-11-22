@@ -27,7 +27,7 @@ public:
     // getters
     int getTamanho() const;
     int getCapacidade() const;
-    T last(); // retorna v[tamanho - 1] (ultimo elemento do vetor)
+    T last() const; // retorna v[tamanho - 1] (ultimo elemento do vetor)
 
     // push back
     void adicionar(const T &novo);
