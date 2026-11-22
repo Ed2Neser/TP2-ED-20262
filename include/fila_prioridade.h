@@ -9,7 +9,7 @@ struct ElementoPrioridade
     int idCliente;
 };
 
-class FilaPrioridade : private Vetor<ElementoPrioridade>
+class FilaPrioridade
 {
 private:
     Vetor<ElementoPrioridade> v;
@@ -23,7 +23,7 @@ private:
     void Desce(int i);
 
 public:
-    FilaPrioridade();
+    FilaPrioridade() = default;
     ~FilaPrioridade() = default;
 
     void adicionar(int prioridade, int idCliente);

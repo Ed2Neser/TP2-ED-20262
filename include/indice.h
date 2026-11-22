@@ -22,7 +22,7 @@ public:
 
     void trocarModo(char modo); // 'A' para AVL, 'H' para Hash
 
-    // removerCliente retira o cliente do vetor (criar uma função que remove ordenado (arrastando o resto do vetor) E do dicionario
+    // removerCliente retira o cliente do vetor (criar uma função em Vetor que remove ordenado (arrastando o resto do vetor) E do dicionario
 };
 
 #endif

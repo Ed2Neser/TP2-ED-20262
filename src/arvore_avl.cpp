@@ -56,8 +56,8 @@ void ArvoreAVL::rotacaoDireita(NoAVL *&no)
     NoAVL *aux = no->esq;
     no->esq = aux->dir;
     aux->dir = no;
-    atualizarAltura(no); // primeiro quem desceu
-    atualizarAltura(aux);  // depois quem subiu
+    atualizarAltura(no);  // primeiro quem desceu
+    atualizarAltura(aux); // depois quem subiu
     no = aux;
 }
 
@@ -66,8 +66,8 @@ void ArvoreAVL::rotacaoEsquerda(NoAVL *&no)
     NoAVL *aux = no->dir;
     no->dir = aux->esq;
     aux->esq = no;
-    atualizarAltura(no); // primeiro quem desceu
-    atualizarAltura(aux);  // depois quem subiu
+    atualizarAltura(no);  // primeiro quem desceu
+    atualizarAltura(aux); // depois quem subiu
     no = aux;
 }
 
